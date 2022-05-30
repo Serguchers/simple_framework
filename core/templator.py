@@ -1,9 +1,14 @@
-from jinja2 import Template
+from jinja2 import Template, FileSystemLoader
+from jinja2.environment import Environment
 from os.path import join
 
 
 def render(tmplt_name, folder='templates', **kwargs):
-    file_path = join(folder, tmplt_name)
-    with open(file_path, encoding='utf-8') as page:
-        template = Template(page.read())
+    
+    # Объект окружения
+    env = Environment()
+    # Устанавливаем loader, который будет искать шаблоны в папке
+    env.loader = FileSystemLoader(folder)
+    template = env.get_template(tmplt_name)
+    
     return template.render(**kwargs)
