@@ -1,5 +1,3 @@
-import quopri
-
 def parse_input_data(data):
         result = {}
         if data:
@@ -37,16 +35,7 @@ class PostRequestHandler:
     def get_request_params(environ):
         data = PostRequestHandler.get_wsgi_input_data(environ)
         if data:
-            print(data)
             data_str = data.decode(encoding='utf-8')
             data = parse_input_data(data_str)
         return data
     
-    @staticmethod
-    def decode_value(data):
-        decoded_data = {}
-        for k, v in data.items():
-            value = bytes(v.replace('%', '=').replace('+', ' '), 'UTF-8')
-            value_decoded_str = quopri.decodestring(value).decode('UTF-8')
-            decoded_data[k] = value_decoded_str
-        return decoded_data
