@@ -1,6 +1,7 @@
 from copy import deepcopy
 from quopri import decodestring
 
+
 class User:
     pass
 
