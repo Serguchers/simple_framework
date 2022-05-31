@@ -96,11 +96,6 @@ class CreateCategory:
             return '200 OK', render('create-category.html',
                                     categories=site.categories)
             
-# Список категорий
-class CategoryList:
-    def __call__(self, request):
-        return '200 OK', render('category-list.html',
-                                objects_list=site.categories)
         
 # Копирование курса
 class CopyCourse:

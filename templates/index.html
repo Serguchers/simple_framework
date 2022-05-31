@@ -10,10 +10,12 @@
 {% endblock %}
 {% block body %}
 	<div>
-		<a href="/create-category/">Создать новую категорию</a>
-	</div>
-	<div>
 		<h1>Список существующих категорий</h1>
+		<div>
+			<a href="/create-category/">Создать новую категорию</a>
+		</div>
+		<br>
+		<br>``
         {% for item in objects_list %}
         <li>
             {{item.name}} <span>Количество курсов: {{item.course_count()}}</span>
