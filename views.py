@@ -111,13 +111,15 @@ class CopyCourse:
             name = request_params['name']
             existing_course = site.find_course_by_name(name)
             if existing_course:
+                category = existing_course.category
                 new_course_name = f'copy_{name}'
                 new_course = existing_course.clone()
-                new_course = new_course_name
+                new_course.name = new_course_name
                 site.courses.append(new_course)
-            
+                category.courses.append(new_course)
+                
             return '200 OK', render('course-list.html',
-                                    objects_list=site.categories,
+                                    objects_list=site.courses,
                                     name=new_course.category.name)
         except KeyError:
             return '200 OK', 'There are no courses for this category!'          

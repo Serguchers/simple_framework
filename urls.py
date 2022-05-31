@@ -1,7 +1,11 @@
-from views import Index, Contacts, About
+from views import Index, About, CoursesList, CreateCourse, CategoryList, CopyCourse, CreateCategory
 
 routes = {
     '/': Index(),
-    '/contacts/': Contacts(),
-    '/about/': About()
+    '/about/': About(),
+    '/courses-list/': CoursesList(),
+    '/create-course/': CreateCourse(),
+    '/create-category/': CreateCategory(),
+    '/category-list/': CategoryList(),
+    '/copy-course/': CopyCourse()
 }

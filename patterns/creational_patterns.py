@@ -35,7 +35,7 @@ class Course(CoursePrototype):
     def __init__(self, name, category):
         self.name = name
         self.category = category
-        self.category.couses.append(self)
+        self.category.courses.append(self)
         
 # Курс в записи
 class RecordedCourse(Course):
