@@ -1,35 +1,27 @@
 from core.templator import render
 from patterns.creational_patterns import Engine
+from patterns.structural_patterns import AppRoute
+# from urls import routes
 
 
 site = Engine()
-
-# class Index:
-#     def __call__(self, request):
-#         return '200 OK', render('index.html', date=request.get('date', None))
-    
-
-# class Contacts:
-#     def __call__(self, request):
-#         return '200 OK', render('contacts.html', date=request.get('date', None))
-    
-    
-# class About:
-#     def __call__(self, request):
-#         return '200 OK', render('about.html', date=request.get('date', None))
+routes = {}
 
 # Главная страница
+@AppRoute(routes=routes, url='/')
 class Index:
     def __call__(self, request):
         return '200 OK', render('index.html', objects_list=site.categories)
     
 # Описание проекта
+@AppRoute(routes=routes, url='/about/')
 class About:
     def __call__(self, request):
         return '200 OK', render('about.html')
     
 
 # Список курсов
+@AppRoute(routes=routes, url='/courses-list/')
 class CoursesList:
     def __call__(self, request):
         try:
@@ -43,6 +35,7 @@ class CoursesList:
             return '200 OK', 'There are no courses for this category!'
         
 # Создание курсов
+@AppRoute(routes=routes, url='/create-course/')
 class CreateCourse:
     category_id = -1
     
@@ -75,6 +68,7 @@ class CreateCourse:
                 return '200 OK', 'There is no such category!'
             
 # Создание категорий
+@AppRoute(routes=routes, url='/create-category/')
 class CreateCategory:
     def __call__(self, request):
         if request['method'] == 'POST':
@@ -98,6 +92,7 @@ class CreateCategory:
             
         
 # Копирование курса
+@AppRoute(routes=routes, url='/copy-course/')
 class CopyCourse:
     def __call__(self, request):
         request_params = request['request_params']
