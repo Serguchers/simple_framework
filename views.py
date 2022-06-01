@@ -1,14 +1,14 @@
 from core.templator import render
 from patterns.creational_patterns import Engine
 from patterns.structural_patterns import AppRoute, TimeLogger
-from patterns.observers import SmsNotifier, EmailNotifier
+from patterns.observers import Subject, SmsNotifier, EmailNotifier
 from patterns.class_based_views import TemplateView, ListView, CreateView
 from patterns.serializers import BaseSerializer
 # from urls import routes
 
 site = Engine()
-email_notifier = EmailNotifier()
-sms_notifier = SmsNotifier()
+notifier = Subject()
+notifier.observers = [EmailNotifier(), SmsNotifier()]
 routes = {}
 
 # Главная страница
@@ -152,4 +152,10 @@ class EnrollStudentView(CreateView):
         student_name = site.decode_value(data['student_name'])
         student = site.find_student_by_name(student_name)
         course.enroll_student(student)
+        notifier.notify(site)
         
+        
+@AppRoute(routes=routes, url='/api/')
+class CourseApi:
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.courses).save()

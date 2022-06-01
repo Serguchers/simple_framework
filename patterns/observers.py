@@ -11,9 +11,9 @@ class Subject:
     def __init__(self):
         self.observers = []
     
-    def notify(self):
+    def notify(self, subject):
         for item in self.observers:
-            item.update(self)
+            item.update(subject)
             
 
 class SmsNotifier(Observer):
