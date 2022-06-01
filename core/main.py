@@ -35,9 +35,11 @@ class Framework:
         request['method'] = method
         if method == 'POST':
             data = PostRequestHandler().get_request_params(environ)
+            request['data'] = Framework.decode_value(data)
             print(f'Поступил POST-запрос {Framework.decode_value(data)}')
         if method == 'GET':
             data = GetRequestHandler().get_request_params(environ)
+            request['request_params'] = Framework.decode_value(data)
             print(f'Поступил GET-запрос: {Framework.decode_value(data)}')
         
         code, body = view(request)

@@ -1,7 +1,8 @@
 from email.mime import application
 from wsgiref.simple_server import make_server
 from core.main import Framework
-from urls import routes
+# from urls import routes
+from views import routes
 
 
 application = Framework(routes)
