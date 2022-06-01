@@ -1,6 +1,6 @@
 from core.templator import render
 from patterns.creational_patterns import Engine
-from patterns.structural_patterns import AppRoute
+from patterns.structural_patterns import AppRoute, TimeLogger
 # from urls import routes
 
 
@@ -10,6 +10,7 @@ routes = {}
 # Главная страница
 @AppRoute(routes=routes, url='/')
 class Index:
+    @TimeLogger(name='Index')
     def __call__(self, request):
         return '200 OK', render('index.html', objects_list=site.categories)
     
