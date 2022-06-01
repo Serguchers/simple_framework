@@ -3,7 +3,8 @@ from quopri import decodestring
 
 
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class Teacher(User):
@@ -11,7 +12,9 @@ class Teacher(User):
 
 
 class Studnet(User):
-    pass
+    def __init__(self, name):
+        super().__init__(name)
+        self.courses = []
 
 # Фабричный метод создания пользователей
 class UserFactory:
@@ -21,8 +24,8 @@ class UserFactory:
     }
     
     @classmethod
-    def create_user(cls, type_):
-        return cls.types[type_]()
+    def create_user(cls, type_, name):
+        return cls.types[type_](name)
     
 
 # Порождающий паттерн прототип
@@ -36,6 +39,11 @@ class Course(CoursePrototype):
         self.name = name
         self.category = category
         self.category.courses.append(self)
+        self.students = []
+        
+    def enroll_student(self, student):
+        self.students.append(student)
+        student.courses.append(self)
         
 # Курс в записи
 class RecordedCourse(Course):
@@ -82,8 +90,8 @@ class Engine:
         self.categories = []
         
     @staticmethod
-    def create_user(type_):
-        return UserFactory.create_user(type_)
+    def create_user(type_, name):
+        return UserFactory.create_user(type_, name)
     
     @staticmethod
     def create_category(name, category=None):
@@ -104,6 +112,11 @@ class Engine:
             if item.name == name:
                 return item
         return None
+    
+    def find_student_by_name(self, name):
+        for item in self.students:
+            if item.name == name:
+                return item
     
     @staticmethod
     def decode_value(val):
