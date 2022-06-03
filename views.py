@@ -1,10 +1,14 @@
 from core.templator import render
 from patterns.creational_patterns import Engine
 from patterns.structural_patterns import AppRoute, TimeLogger
+from patterns.observers import Subject, SmsNotifier, EmailNotifier
+from patterns.class_based_views import TemplateView, ListView, CreateView
+from patterns.serializers import BaseSerializer
 # from urls import routes
 
-
 site = Engine()
+notifier = Subject()
+notifier.observers = [EmailNotifier(), SmsNotifier()]
 routes = {}
 
 # Главная страница
@@ -115,3 +119,43 @@ class CopyCourse:
         except KeyError:
             return '200 OK', 'There are no courses for this category!'          
             
+            
+@AppRoute(routes=routes, url='/students-list/')
+class StudentsListView(ListView):
+    queryset = site.students
+    template_name = 'students-list.html'
+    
+    
+@AppRoute(routes=routes, url='/create-student/')
+class CreateStudentView(CreateView):
+    template_name = 'create-student.html'
+    
+    def create_obj(self, data):
+        name = site.decode_value(data['name'])
+        new_student = site.create_user('student', name)
+        site.students.append(new_student)
+        
+        
+@AppRoute(routes=routes, url='/enroll-student/')
+class EnrollStudentView(CreateView):
+    template_name = 'enroll-student.html'
+    
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['courses'] = site.courses
+        context['students'] = site.students
+        return context
+    
+    def create_obj(self, data):
+        course_name = site.decode_value(data['course_name'])
+        course = site.find_course_by_name(course_name)
+        student_name = site.decode_value(data['student_name'])
+        student = site.find_student_by_name(student_name)
+        course.enroll_student(student)
+        notifier.notify(site)
+        
+        
+@AppRoute(routes=routes, url='/api/')
+class CourseApi:
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(site.courses).save()
