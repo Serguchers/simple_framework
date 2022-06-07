@@ -11,7 +11,7 @@ class Teacher(User):
     pass
 
 
-class Studnet(User):
+class Student(User):
     def __init__(self, name):
         super().__init__(name)
         self.courses = []
@@ -19,7 +19,7 @@ class Studnet(User):
 # Фабричный метод создания пользователей
 class UserFactory:
     types = {
-        'student': Studnet,
+        'student': Student,
         'teacher': Teacher
     }
     
