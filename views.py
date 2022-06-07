@@ -1,15 +1,21 @@
+import imp
 from core.templator import render
-from patterns.creational_patterns import Engine
+from patterns.creational_patterns import Engine, Student
 from patterns.structural_patterns import AppRoute, TimeLogger
 from patterns.observers import Subject, SmsNotifier, EmailNotifier
 from patterns.class_based_views import TemplateView, ListView, CreateView
 from patterns.serializers import BaseSerializer
+from patterns.unit_of_work import UnitOfWork
+from patterns.mappers import MapperRegistry
 # from urls import routes
 
 site = Engine()
 notifier = Subject()
 notifier.observers = [EmailNotifier(), SmsNotifier()]
 routes = {}
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
+
 
 # Главная страница
 @AppRoute(routes=routes, url='/')
@@ -122,8 +128,10 @@ class CopyCourse:
             
 @AppRoute(routes=routes, url='/students-list/')
 class StudentsListView(ListView):
-    queryset = site.students
     template_name = 'students-list.html'
+    
+    def get_queryset(self):
+        return MapperRegistry.get_current_mapper('student').all()
     
     
 @AppRoute(routes=routes, url='/create-student/')
@@ -134,6 +142,8 @@ class CreateStudentView(CreateView):
         name = site.decode_value(data['name'])
         new_student = site.create_user('student', name)
         site.students.append(new_student)
+        new_student.mark_new()
+        UnitOfWork.get_current().commit()
         
         
 @AppRoute(routes=routes, url='/enroll-student/')
