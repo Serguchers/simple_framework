@@ -1,5 +1,6 @@
 from copy import deepcopy
 from quopri import decodestring
+from patterns.unit_of_work import DomainObject
 
 
 class User:
@@ -11,7 +12,7 @@ class Teacher(User):
     pass
 
 
-class Student(User):
+class Student(User, DomainObject):
     def __init__(self, name):
         super().__init__(name)
         self.courses = []

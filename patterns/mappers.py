@@ -1,5 +1,5 @@
 import sqlite3
-from creational_patterns import Student
+from patterns.creational_patterns import Student
 from core.errors import *
 
 connection = sqlite3.connect('test_base.sqlite')

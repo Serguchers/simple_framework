@@ -49,7 +49,7 @@ class UnitOfWork:
         __class__.set_current(UnitOfWork())
         
     @classmethod
-    def set_method(cls, unit_of_work):
+    def set_current(cls, unit_of_work):
         cls.current_thread.unit_of_work = unit_of_work
     
     @classmethod
